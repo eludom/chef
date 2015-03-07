@@ -1,0 +1,41 @@
+{
+  "name": "emacs",
+  "description": "Installs and configures emacs from source",
+  "long_description": "Installs and configures eamcs from source, per https://raw.githubusercontent.com/eludom/HOWTO/master/emacsFromSrc.org",
+  "maintainer": "George Jones",
+  "maintainer_email": "gmj@pobox.com",
+  "license": "Apache 2.0",
+  "platforms": {
+    "ubuntu": ">= 0.0.0"
+  },
+  "dependencies": {
+
+  },
+  "recommendations": {
+
+  },
+  "suggestions": {
+
+  },
+  "conflicting": {
+
+  },
+  "providing": {
+
+  },
+  "replacing": {
+
+  },
+  "attributes": {
+
+  },
+  "groupings": {
+
+  },
+  "recipes": {
+
+  },
+  "version": "0.1.1",
+  "source_url": "",
+  "issues_url": ""
+}

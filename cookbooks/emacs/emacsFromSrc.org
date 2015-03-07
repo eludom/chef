@@ -1,0 +1,27 @@
+#! /bin/bash
+# Install latest emacs from src, per
+#
+# http://ergoemacs.org/emacs/building_emacs_from_git_repository.html
+#
+# install essential build tools
+sudo apt-get install build-essential
+sudo apt-get install git
+
+# get all dependencies of a previous emacs version
+sudo apt-get -y build-dep emacs23 # may have to uncomment deb-src lines in /etc/apt/sources.list
+
+mkdir -p ~/git
+cd ~/git
+git clone https://github.com/mirrors/emacs 
+cd ~/git/emacs
+
+./autogen.sh
+./configure
+make bootstrap
+sudo make install
+
+# # prepend emacs path to environment variable PATH
+# PATH=$HOME/git/emacs/src:$PATH
+# # make sure the dir is correct
+# at bottom of your ~/.bashrc.
+
