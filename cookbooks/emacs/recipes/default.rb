@@ -2,63 +2,145 @@
 # Cookbook Name:: emacs
 # Recipe:: default
 #
-# Install latest emacs from src, per
-#
-#   http://ergoemacs.org/emacs/building_emacs_from_git_repository.html
-#
-# as chef cookbook.
-#
-# George Jones <gmj AT pobox DOT com>
-#
-#
-#
-package 'build-essential'
-package 'git'
+# Copyright (c) 2015 The Authors, All Rights Reserved.
 
-## Apt-get update if it has not been done in 24 hours
-#execute "apt-get-update-periodic" do
-#  command "apt-get update"
-#  ignore_failure true
-#  only_if do
-#    File.exists?('/var/lib/apt/periodic/update-success-stamp') &&
-#    File.mtime('/var/lib/apt/periodic/update-success-stamp') < Time.now - 86400
-#  end
-#end
+# Run somehting like this:
+#   sudo chef-client --local-mode --runlist 'recipe[emacs]'
 
-# Install postfix first to prevent it from prompting during 'apt-get -y build-dep emacs23'
-bash "install_postfix" do
-  user "root"
-  cwd "/tmp"
-  code <<-EOH
-  debconf-set-selections <<< "postfix postfix/mailname string `hostname`"
-  debconf-set-selections <<< "postfix postfix/main_mailer_type string 'No configuration'"
-  apt-get install -y postfix
-  EOH
+
+# Set up a tmp srcdir
+srcdir = "#{Chef::Config[:file_cache_path]}/emacs-source"
+
+# Update the system
+
+case node['platform']
+#====================================================================
+# Debian, Ubuntu
+#====================================================================
+when 'debian', 'ubuntu'
+
+  # Install "build essentials"
+  
+  package "build-essential"
+
+  # Install dependancies
+  #
+  # TODO sudo apt-get -y build-dep emacs23
+
+  %w(vim unzip postfix git).each do |pkg|
+    package pkg
+  end
+
+#====================================================================
+# CentOS
+#====================================================================
+when 'centos'
+
+  # Install "build essentials"
+  
+  bash "yum groupinstall Development tools" do
+    user "root"
+    group "root"
+    code <<-EOC
+      yum groupinstall "Development tools" -y
+    EOC
+    not_if "yum grouplist installed | grep 'Development tools'"
+  end
+
+  bash "yum groupinstall Development Libraries" do
+    user "root"
+    group "root"
+    code <<-EOC
+      yum groupinstall "Development Libraries" -y
+    EOC
+    not_if "yum grouplist installed | grep 'Development Libraries'"
+  end
+
+  # Install dependancies
+  #
+  # TODO centos equivilant of ?sudo apt-get -y build-dep emacs23?
+
+  # Install git
+  %w(
+    git
+    man
+    postfix
+  ).each do |pkg|
+    package pkg do
+      options "--enablerepo=epel"
+      action :install
+    end
+  end
+
+
+#====================================================================
+# AmazonLinux
+#====================================================================
+when 'amazon'
+
+  # Install "build essentials"
+  
+  bash "yum groupinstall Development tools" do
+    user "root"
+    group "root"
+    code <<-EOC
+      yum groupinstall "Development tools" -y
+    EOC
+    not_if "yum grouplist installed | grep 'Development tools'"
+  end
+
+  bash "yum groupinstall Development Libraries" do
+    user "root"
+    group "root"
+    code <<-EOC
+      yum groupinstall "Development Libraries" -y
+    EOC
+    not_if "yum grouplist installed | grep 'Development Libraries'"
+  end
+
+  # Install git
+
+  %w(
+    git
+    man
+    postfix
+  ).each do |pkg|
+    package pkg do
+      options "--enablerepo=epel"
+      action :install
+    end
+  end
 end
 
-bash "install_emacs" do
-  user "root"
-  cwd "/tmp"
+# Install dependancies
+#
+# TODO centos equivilant of ?sudo apt-get -y build-dep emacs23?
+
+# Pull latest emacs sources using git
+
+git "#{Chef::Config[:file_cache_path]}/emacs-source" do  
+  repository "https://github.com/mirrors/emacs.git"
+  action :checkout  
+end  
+
+# Compile Emacs
+
+
+bash "build emacs24" do
+  cwd srcdir
+  creates "#{srcdir}/src/emacs"
   code <<-EOH
-    sudo apt-get -y build-dep emacs23 
-    mkdir -p ~/git
-    cd ~/git
-
-    if [ -d ~/git/emacs ]; then
-      cd ~/git/emacs
-      git pull
-    else
-      git clone https://github.com/mirrors/emacs 
-      cd ~/git/emacs
-    fi
-    
-   ./autogen.sh
-   ./configure
-    make bootstrap
-    sudo make install
+    ./autogen.sh && \
+    ./configure --without-x && \
+    make bootstrap && \
+    make 2>&1 >| make-#{node.name}-#{node['ohai_time']}
   EOH
-
+end  
+  
+execute "install emacs24" do
+  cwd srcdir
+  command "make install 2>&1 >| make-#{node.name}-#{node['ohai_time']}"
+  creates "/usr/local/bin/emacs"
+  only_if "#{srcdir}/src/emacs --version"
 end
-
-
 
