@@ -1,0 +1,2 @@
+This repository contains Chef cookbooks.   Mostly testing for now (<2015-12-14 Mon>).
+Only one for now is a cookbook to build emacs from source.   
