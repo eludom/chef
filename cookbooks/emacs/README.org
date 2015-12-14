@@ -1,8 +1,22 @@
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:nil arch:headline
+#+OPTIONS: author:t c:nil creator:nil d:(not "LOGBOOK") date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:3 p:nil pri:nil prop:nil
+#+OPTIONS: stat:t tags:t tasks:t tex:t timestamp:t title:t toc:3
+#+OPTIONS: todo:t |:t
+#+TITLE: Emacs-from-soucce Cookbook/HOWTO
+#+DATE: <2015-12-14 07:38:32 Monday>
+#+AUTHOR: George M Jones
+#+EMAIL: gmj@pobox.com
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 25.0.50.1 (Org mode 8.3beta)
+
 This is a Chef cookbook to build the latest Emacs from source.
 
 * Tested on the following platforms
-** TODO Amazon Linux  
-** TODO Ubuntu
+** DONE Amazon Linux  
+** IN-PROGRESS Ubuntu
 ** TODO CentOS
 
 * Usage
@@ -19,5 +33,50 @@ This is a Chef cookbook to build the latest Emacs from source.
        https://github.com/team-lab/lab-chef-common/blob/master/recipes/default.rb
   - Chef Cookbook for Emacs on ubuntu :: http://jtimberman.housepub.org/blog/2012/02/25/recipe-for-building-emacs/
 
+
+* Details of bringing up on various platforms
+** Ubuntu 15.10
+*** DONE Select Image   
+   - Find an Ubuntu image via https://cloud-images.ubuntu.com/locator/ec2/
+*** DONE Launch EC2 Instance
+    - VPC choices left to user
+*** DONE Set the hostname
+
+      #+begin_example
+      hostname emacs2
+      #+end_example
+
+*** TODO Configure SSH agent forwarding
+
+    Configure an ssh agent, add keys and SSH with agent forwarding
+    turned on.   See:
+    https://developer.github.com/guides/using-ssh-agent-forwarding/
+    and
+    https://blogs.aws.amazon.com/security/post/Tx3N8GFK85UN1G6/Securely-connect-to-Linux-instances-running-in-a-private-Amazon-VPC 
+
+    Do something like:
+
+    #+begin_example
+    ssh-agent | tee ssh-agent.sh
+    source ssh-agent.sh
+    ssh-add ~/.ssh/id_rsa
+    ssh -A HOST
+
+    #+end_example
+
+*** TODO Pull chef configs from github (lacking a chef server for now)
+    #+begin_example
+    git clone git@github.com:eludom/chef.git
+    #+end_example
+
+*** TODO Set global git parameters
+    #+begin_example
+    git config --global user.email gmj@pobox.com
+    git config --global user.name "Geroge Jones"
+    #+end_example
+    
+
+
+*** 
 
 
