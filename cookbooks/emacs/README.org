@@ -4,7 +4,7 @@
 #+OPTIONS: stat:t tags:t tasks:t tex:t timestamp:t title:t toc:3
 #+OPTIONS: todo:t |:t
 #+TITLE: Emacs-from-soucce Cookbook/HOWTO
-#+DATE: <2015-12-14 07:38:32 Monday>
+#+DATE: <2015-12-14 08:30:27 Monday>
 #+AUTHOR: George M Jones
 #+EMAIL: gmj@pobox.com
 #+LANGUAGE: en
@@ -34,7 +34,7 @@ This is a Chef cookbook to build the latest Emacs from source.
   - Chef Cookbook for Emacs on ubuntu :: http://jtimberman.housepub.org/blog/2012/02/25/recipe-for-building-emacs/
 
 
-* Details of bringing up on various platforms
+* Details of bringing up emacs on various platforms
 ** Ubuntu 15.10
 *** DONE Select Image   
    - Find an Ubuntu image via https://cloud-images.ubuntu.com/locator/ec2/
@@ -75,8 +75,16 @@ This is a Chef cookbook to build the latest Emacs from source.
     git config --global user.name "Geroge Jones"
     #+end_example
     
+*** Install and install chef-DK
+    See https://downloads.chef.io/chef-dk/
 
+    #+begin_example
+    wget https://opscode-omnibus-packages.s3.amazonaws.com/ubuntu/12.04/x86_64/chefdk_0.10.0-1_amd64.deb
+    sudo dpkg -i chefdk_0.10.0-1_amd64.deb
+    #+end_example
 
-*** 
-
+** Run the cookbook
+   #+begin_example
+   sudo chef-client --local-mode --runlist 'recipe[emacs]'
+   #+end_example
 
