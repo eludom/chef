@@ -19,6 +19,8 @@ case node['platform']
 #====================================================================
 when 'debian', 'ubuntu'
 
+  %w{ git-core build-essential texinfo autoconf libncurses-dev }.each {|prereq| package prereq}
+
   # Install "build essentials"
   
   package "build-essential"
@@ -27,7 +29,7 @@ when 'debian', 'ubuntu'
   #
   # TODO sudo apt-get -y build-dep emacs23
 
-  %w(vim unzip postfix git).each do |pkg|
+  %w(unzip postfix git).each do |pkg|
     package pkg
   end
 
