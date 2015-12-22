@@ -144,3 +144,5 @@ execute "install emacs24" do
   only_if "#{srcdir}/src/emacs --version"
 end
 
+# Cleanup 
+
