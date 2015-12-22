@@ -29,7 +29,12 @@ when 'debian', 'ubuntu'
   #
   # TODO sudo apt-get -y build-dep emacs23
 
-  %w(unzip postfix git).each do |pkg|
+  %w(unzip 
+     postfix 
+     git 
+     aspell
+     aspell-en
+     ).each do |pkg|
     package pkg
   end
 
@@ -62,11 +67,13 @@ when 'centos'
   #
   # TODO centos equivilant of ?sudo apt-get -y build-dep emacs23?
 
-  # Install git
+  # Install packages needed
   %w(
     git
     man
     postfix
+    aspell
+    aspell-en
   ).each do |pkg|
     package pkg do
       options "--enablerepo=epel"
@@ -100,12 +107,14 @@ when 'amazon'
     not_if "yum grouplist installed | grep 'Development Libraries'"
   end
 
-  # Install git
+  # Install packages needed
 
   %w(
     git
     man
     postfix
+    aspell
+    aspell-en
   ).each do |pkg|
     package pkg do
       options "--enablerepo=epel"
