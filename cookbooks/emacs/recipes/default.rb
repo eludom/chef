@@ -19,7 +19,7 @@ case node['platform']
 #====================================================================
 when 'debian', 'ubuntu'
 
-  %w{ git-core build-essential texinfo autoconf libncurses-dev }.each {|prereq| package prereq}
+  %w{ git-core build-essential texinfo autoconf libncurses-dev gnutls-bin}.each {|prereq| package prereq}
 
   # Install "build essentials"
   
@@ -74,6 +74,7 @@ when 'centos'
     postfix
     aspell
     aspell-en
+    gnutls
   ).each do |pkg|
     package pkg do
       options "--enablerepo=epel"
@@ -115,6 +116,7 @@ when 'amazon'
     postfix
     aspell
     aspell-en
+    gnutls
   ).each do |pkg|
     package pkg do
       options "--enablerepo=epel"
