@@ -32,6 +32,7 @@ when 'debian', 'ubuntu'
   %w(unzip 
      postfix 
      git 
+     ispell
      aspell
      aspell-en
      ).each do |pkg|
@@ -72,6 +73,7 @@ when 'centos'
     git
     man
     postfix
+    ispell     
     aspell
     aspell-en
     gnutls
@@ -114,6 +116,7 @@ when 'amazon'
     git
     man
     postfix
+    ispell
     aspell
     aspell-en
     gnutls
